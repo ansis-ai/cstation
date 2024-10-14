@@ -25,7 +25,7 @@
           - name: '{{ docker_PW_network }}'
         networks_cli_compatible: yes
         ports:
-          - "8000:8000"
+          - "8001:8001"
           - "9000:9000"
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock
