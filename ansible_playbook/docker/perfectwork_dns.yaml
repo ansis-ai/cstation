@@ -48,7 +48,7 @@
     # Prepare the Traefik Long Polling Configuration file
     - name: Prepare Traefik Long Polling Configuration File
       template:
-        src: /opt/SysOps/config_file/templates/traefik_longpolling_config.j2
+        src: /opt/cstation/config_file/templates/traefik_longpolling_config.j2
         dest: /var/lib/perfectwork/{{ inventory_hostname|upper }}/CONTAINERS/{{ inventory_hostname|upper }}_TRAEFIK/conf/{{ PW_domain_name }}.yaml
         mode: "0755"
 
@@ -60,7 +60,7 @@
 
     - name: Prepare PW Configuration File - /var/lib/odoo/pw.conf
       template:
-        src: /opt/SysOps/config_file/templates/pw.conf.j2
+        src: /opt/cstation/config_file/templates/pw.conf.j2
         dest: /var/lib/perfectwork/{{ inventory_hostname|upper }}/CONTAINERS/{{ PW_container_name }}/pw.conf
         owner: "101"
         group: "102"

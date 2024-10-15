@@ -43,15 +43,15 @@ def server(ctx, host, version, ssh_port, only_addons):
     else:
         # Need to prepare directory for sending the files to Remote Host
         click.echo(f'Deploy PerfectWORK Core Modules {version} To -> {host} using Port {ssh_port}')
-        os.system(f'rm -rf /opt/SysOps/tmp/PW.{version}')
-        os.system(f'rsync -avzhe --delete --exclude ".*" --exclude "__pycache__" --exclude "*pyc" /opt/PW/PW.{version}/  /opt/SysOps/tmp/PW.{version}')
-        os.system(f'mv /opt/SysOps/tmp/PW.{version}/odoo/addons/* /opt/SysOps/tmp/PW.{version}/addons/')
-        os.system(f'rm -rf /opt/SysOps/tmp/PW.{version}/odoo/addons')
-        os.system(f'mv /opt/SysOps/tmp/PW.{version}/addons /opt/SysOps/tmp/PW.{version}/odoo/')
+        os.system(f'rm -rf /opt/cstation/tmp/PW.{version}')
+        os.system(f'rsync -avzhe --delete --exclude ".*" --exclude "__pycache__" --exclude "*pyc" /opt/PW/PW.{version}/  /opt/cstation/tmp/PW.{version}')
+        os.system(f'mv /opt/cstation/tmp/PW.{version}/odoo/addons/* /opt/cstation/tmp/PW.{version}/addons/')
+        os.system(f'rm -rf /opt/cstation/tmp/PW.{version}/odoo/addons')
+        os.system(f'mv /opt/cstation/tmp/PW.{version}/addons /opt/cstation/tmp/PW.{version}/odoo/')
         click.echo(f'Deploy PerfectWORK Version {version} To -> {host} using Port {ssh_port}')
-        os.system(f'rsync -avzhe "ssh -p{ssh_port}"  --delete --exclude  ".*" --exclude "__pycache__"  /opt/SysOps/tmp/PW.{version}/odoo/ root@{host}:/var/lib/perfectwork/PW.{version}')
+        os.system(f'rsync -avzhe "ssh -p{ssh_port}"  --delete --exclude  ".*" --exclude "__pycache__"  /opt/cstation/tmp/PW.{version}/odoo/ root@{host}:/var/lib/perfectwork/PW.{version}')
         # Clear the directory
-        os.system(f'rm -rf /opt/SysOps/tmp/PW.{version}')
+        os.system(f'rm -rf /opt/cstation/tmp/PW.{version}')
   
 @perfectwork.command('local', short_help='Configure PerfectWORK for Local Development Operations')
 @click.argument('version', metavar="<version>", type=click.STRING)
