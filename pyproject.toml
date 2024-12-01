@@ -1,0 +1,10 @@
+[project]
+name = "cstation"
+version = "0.1.1"
+description = "Managing PerfectWork Platform Infrastracture"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "auto-click-auto>=0.1.5",
+    "click>=8.1.7",
+]

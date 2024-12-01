@@ -7,16 +7,13 @@ from commands import perfectwork
 from commands import perfectwork6
 from commands import server
 
-@click.group("cli")
+@click.group(name="cli")
 @click.pass_context
-@click.version_option("0.1.15", prog_name="cstation Control Station")
-
-# @click.pass_context
+@click.version_option(version="0.1.15", prog_name="cstation Control Station")
 def cli(ctx):
     """
-    \b
-    Control Station ( Internal Use )
-    An utilties for Deployment
+    Control Station (Internal Use)
+    Utilities for Deployment
     """
     pass
 
