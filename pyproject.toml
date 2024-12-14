@@ -8,3 +8,8 @@ dependencies = [
     "auto-click-auto>=0.1.5",
     "click>=8.1.7",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+]
