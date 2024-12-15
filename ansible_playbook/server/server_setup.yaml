@@ -1,6 +1,6 @@
 #! /usr/local/bin/ansible-playbook
 ---
-  - hosts: all
+  - hosts: sg01
     become: true
     
     tasks:
