@@ -25,16 +25,8 @@ all:
 
 ANSIS_SGP:
     hosts:
-        sg03:
-            ansible_host: sg01.ansis.com.sg
-            traefik_container: BYNSG01_TRAEFIK
-            portainer_container: SG11_PORTAINER
-            postgresql_container: BYNSG01DB
-            postgresql_docker_image : postgres:14
-            postgresql_config_file : postgresql.auto.conf_4GB.j2
-            ansible_python_interpreter: /usr/bin/python3
         sg05:
-            ansible_host: sg02.ansis.com.sg
+            ansible_host: sg05.ansis.com.sg
             traefik_container: SG05_TRAEFIK
             portainer_container: SG05_PORTAINER
             postgresql_container: SG05DB

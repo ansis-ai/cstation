@@ -47,7 +47,7 @@ SYC_SGP:
             postgresql_docker_image : postgres:14
             postgresql_version: 14
             postgresql_config_file : postgresql.auto.conf_16GB.j2
-            ansible_python_interpreter: /opt/miniconda3/bin/python3
+            # ansible_python_interpreter: /opt/miniconda3/bin/python3
         sg02:
             ansible_host: sg02.synercatalyst.com
             ansible_user: root
