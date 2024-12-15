@@ -1,0 +1,7 @@
+---
+# Role for Setting Up Odoo Docker Container
+
+- name: Setting Up Docker Internal Network - {{ docker_PW_network | upper }}
+  ansible.builtin.ping:
+  register: command_result
+  ignore_unreachable: true

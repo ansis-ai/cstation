@@ -1,5 +1,5 @@
 ---
-- name: SSH Configuration Playbook
+- name: Test Connection Playbook
   hosts: all
   gather_facts: false
   roles:
