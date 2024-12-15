@@ -1,10 +1,15 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# tasks file for ssh_connection
-- name: Check Server Connection
-  ansible.builtin.ping:
-    # register: command_output
+# Role for Setting Up SSH Connection
 
-  # - name: Print command output
-  #   debug:
-  #     var: command_output.stdout_lines
+- name: Check Server Connection - {{ inventory_hostname|upper }}
+  ansible.builtin.ping:
+  register: command_result
+  ignore_unreachable: true
+
+- name: Setting Up SSH Connection - {{ inventory_hostname|upper }}
+  command: ssh-copy-id -p {{ansible_port}} {{ansible_user}}@{{ansible_host}}
+  delegate_to: localhost
+  register: output
+  # debug: var=output.stdout
+  when: command_result['unreachable'] is true
+

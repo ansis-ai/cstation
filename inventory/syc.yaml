@@ -25,7 +25,7 @@ all:
 SYC_USA:
     hosts:
         us01:
-            ansible_host: 209.182.236.52
+            ansible_host: us01.synercatalyst.com
             ansible_user: root
             ansible_port: 8288
             nginx_container: US01_NGINX

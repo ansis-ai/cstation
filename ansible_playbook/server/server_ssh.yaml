@@ -1,6 +1,6 @@
 ---
 - name: Test Connection Playbook
   hosts: all
-  gather_facts: no
+  gather_facts: false
   roles:
     - ssh_connection
