@@ -1,0 +1,9 @@
+---
+- name: Setting Up Docker Containers for SG01 ( SYNERCATATALYST )
+  hosts: sg01
+  become: true
+  gather_facts: true
+  vars:
+    upgrade_portainer: true
+  roles:
+    - {role: "docker/portainer", tags: ["docker_portainer"]}

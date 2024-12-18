@@ -1,8 +1,9 @@
 ---
-- name: Setting Up Server
+- name: Setting Up Server for SG01 ( SYNERCATATALYST )
   hosts: sg01
   become: true
-  gather_facts: false
+  gather_facts: true
   roles:
     - {role: "server/ssh_connection", tags: ["ssh_connection"]}
     - {role: "server/server_packages", tags: ["server_packages"]}
+

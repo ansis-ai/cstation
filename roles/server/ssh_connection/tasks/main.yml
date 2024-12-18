@@ -1,15 +1,13 @@
 ---
 # Role for Setting Up SSH Connection
-
-- name: Check Server Connection - {{ inventory_hostname|upper }}
+- name: "Check Server Connection - {{ inventory_hostname | upper }}"
   ansible.builtin.ping:
   register: command_result
   ignore_unreachable: true
 
-- name: Setting Up SSH Connection - {{ inventory_hostname|upper }}
-  command: ssh-copy-id -p {{ansible_port}} {{ansible_user}}@{{ansible_host}}
+- name: "Setting Up SSH Connection - {{ inventory_hostname | upper }}"
+  ansible.builtin.command: ssh-copy-id -p {{ ansible_port }} {{ ansible_user }}@{{ ansible_host }}
   delegate_to: localhost
   register: output
   # debug: var=output.stdout
   when: command_result['unreachable'] is true
-

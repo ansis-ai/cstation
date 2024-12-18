@@ -13,17 +13,14 @@
 #   - Anything defined under a host is assumed to be a var
 #   - You can enter hostnames or IP addresses
 #   - A hostname/IP can be a member of multiple groups
-all:
-    hosts:
+
+ANSIS_SGP:
     vars:
         ansible_user: root
         postgresql_db_admin: postgres
         postgresql_db_password: wai39kua
         docker_PW_network: PW_NET
         postgresql_port: 1488
-
-
-ANSIS_SGP:
     hosts:
         sg05:
             ansible_host: sg05.ansis.com.sg
