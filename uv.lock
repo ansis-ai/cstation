@@ -36,8 +36,8 @@ wheels = [
 
 [[package]]
 name = "cstation"
-version = "0.1.1"
-source = { virtual = "." }
+version = "0.1.21"
+source = { editable = "." }
 dependencies = [
     { name = "auto-click-auto" },
     { name = "click" },

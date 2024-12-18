@@ -1,0 +1,8 @@
+---
+- name: Setting Up Server
+  hosts: sg01
+  become: true
+  gather_facts: false
+  roles:
+    - {role: "server/ssh_connection", tags: ["ssh_connection"]}
+    - {role: "server/server_packages", tags: ["server_packages"]}
