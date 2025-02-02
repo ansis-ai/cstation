@@ -1,4 +1,6 @@
-git@github.com:ansis-ai/account-financial-reporting.git -b 16.0
+- github: git@github.com:ansis-ai/account-financial-reporting.git 
+  branch: 16.0
+  local: 
 git@github.com:ansis-ai/account-financial-reporting.git -b 17.0
 
 

@@ -1,6 +1,3 @@
----
-# Role for installing Required packages for system
-
 - name: Create/Update the Portainer container
   community.docker.docker_container:
     name: "{{ inventory_hostname | upper }}_PORTAINER"

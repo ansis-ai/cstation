@@ -1,0 +1,5 @@
+---
+# Role for installing Required packages for system
+- name: Create Docker Network - {{ docker_PW_network }} Application Network
+  community.docker.docker_network:
+    name: {{ docker_PW_network }}

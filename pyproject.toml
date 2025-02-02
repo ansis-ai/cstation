@@ -6,8 +6,12 @@ readme = "README.md"
 authors = [{name = "Loh W S (Wilson)"}]
 requires-python = ">=3.9"
 dependencies = [
+    "ansible>=8.7.0",
+    "ansible-runner>=2.4.0",
     "auto-click-auto>=0.1.5",
     "click>=8.1.7",
+    "pyyaml>=6.0.2",
+    "typer>=0.15.1",
 ]
 
 [build-system]
