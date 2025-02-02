@@ -1,0 +1,99 @@
+---
+- name: Sync OCA GitHub (16.0) repositories to local development server
+  hosts: localhost
+  vars:
+    repos:
+
+      - name: OCA Account Financial Reporting - 16.0
+        fork_url: "https://github.com/OCA/account-financial-reporting.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - partner_statement 
+  
+      - name: OCA Commission - 16.0
+        fork_url: "https://github.com/OCA/commission.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - commission
+          - commission_formula
+
+      - name: OCA Queue - 16.0
+        fork_url: "https://github.com/OCA/queue.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - queue_job
+          - queue_job_batch
+  
+      - name: OCA Report Engine - 16.0
+        fork_url: "https://github.com/OCA/reporting-engine.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - report_xlsx
+          - report_xlsx_helper
+
+      - name: OCA Server Tools - 16.0
+        fork_url: "https://github.com/OCA/server-tools.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - auto_backup
+          - base_fontawesome
+          - database_cleanup
+          - upgrade_analysis
+
+      - name: OCA Server UX - 16.0
+        fork_url: "https://github.com/OCA/server-ux.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - multi_step_wizard
+          - server_action_mass_edit
+
+      - name: OCA Social - 16.0
+        fork_url: "https://github.com/OCA/social.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - mail_gateway
+          - mail_gateway_whatsapp
+          - mail_gateway_telegram
+          - mass_mailing_partner
+
+      - name: OCA Stock Logistics Workflow - 16.0
+        fork_url: "https://github.com/OCA/stock-logistics-workflow.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - stock_picking_back2draft
+          - stock_picking_invoice_link
+
+      - name: OCA Web - 16.0
+        fork_url: "https://github.com/OCA/web.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - web_group_expand
+          - web_notify
+
+      - name: CybroSys Addons - 16.0
+        fork_url: "https://github.com/CybroOdoo/CybroAddons.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - base_accounting_kit
+          - base_account_budget
+          - base_advanced_report_templates
+          - dynamic_accounts_report
+          - sales_order_delivery_status
+          - code_backend_theme
+
+  tasks:
+    - name: Sync each repository with upstream
+      include_tasks: _repo_sync_dir.yaml
+      loop: "{{ repos }}"
+      loop_control:
+        loop_var: repo

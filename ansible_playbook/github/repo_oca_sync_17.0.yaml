@@ -1,0 +1,83 @@
+---
+- name: Sync OCA GitHub (17.0) repositories to local development server
+  hosts: localhost
+  vars:
+    repos:
+
+      - name: OCA Account Financial Reporting - 17.0
+        fork_url: "https://github.com/OCA/account-financial-reporting.git"
+        local_dir: "/opt/PW/PW_ADDONS.7.0/OCA"
+        branch: "17.0"
+        includes:
+          - partner_statement 
+  
+      - name: OCA Commission - 17.0
+        fork_url: "https://github.com/OCA/commission.git"
+        local_dir: "/opt/PW/PW_ADDONS.7.0/OCA"
+        branch: "17.0"
+        includes:
+          - commission
+          - commission_formula
+
+      - name: OCA MUK Modules - 17.0
+        fork_url: "https://github.com/muk-it/odoo-modules.git"
+        local_dir: "/opt/PW/PW_ADDONS.7.0/OCA"
+        branch: "17.0"
+        includes:
+          - muk_web_theme
+          - muk_product
+          - muk_web_colors
+          - muk_web_appsbar
+          - muk_web_dialog
+          - muk_web_chatter
+
+
+      - name: OCA Queue - 17.0
+        fork_url: "https://github.com/OCA/queue.git"
+        local_dir: "/opt/PW/PW_ADDONS.7.0/OCA"
+        branch: "17.0"
+        includes:
+          - queue_job
+          - queue_job_cron_jobrunner
+  
+      - name: OCA Report Engine - 17.0
+        fork_url: "https://github.com/OCA/reporting-engine.git"
+        local_dir: "/opt/PW/PW_ADDONS.7.0/OCA"
+        branch: "17.0"
+        includes:
+          - report_xlsx
+          - report_xlsx_helper
+
+      - name: OCA Server Tools - 17.0
+        fork_url: "https://github.com/OCA/server-tools.git"
+        local_dir: "/opt/PW/PW_ADDONS.7.0/OCA"
+        branch: "17.0"
+        includes:
+          - database_cleanup
+          - upgrade_analysis
+          - views_migration_17
+
+      - name: OCA Web - 17.0
+        fork_url: "https://github.com/OCA/web.git"
+        local_dir: "/opt/PW/PW_ADDONS.7.0/OCA"
+        branch: "17.0"
+        includes:
+          - web_refresher
+
+      - name: CybroSys Addons - 17.0
+        fork_url: "https://github.com/CybroOdoo/CybroAddons.git"
+        local_dir: "/opt/PW/PW_ADDONS.7.0/OCA"
+        branch: "17.0"
+        includes:
+          - base_accounting_kit
+          - base_account_budget
+          - base_advanced_report_templates
+          - dynamic_accounts_report
+          - sales_order_delivery_status
+
+  tasks:
+    - name: Sync each repository with upstream
+      include_tasks: _repo_sync_dir.yaml
+      loop: "{{ repos }}"
+      loop_control:
+        loop_var: repo

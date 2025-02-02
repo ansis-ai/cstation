@@ -1,0 +1,8 @@
+---
+- name: Run a gh command to sync {{ repo.fork_url }} at Github repositories from upstream
+  ansible.builtin.shell: gh repo sync {{ repo.fork_url }} -b {{ repo.branch }}
+  
+- name: Ensure the Github repository {{ repo.fork_url }} {{ repo.branch }} is cloned to {{ repo.local_dir }}
+  ansible.builtin.shell:
+    cmd: git pull
+    chdir: "{{ repo.local_dir }}"

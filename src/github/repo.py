@@ -20,24 +20,28 @@ def load_options(option_file: Path):
     
 
 @app.command()
-def odoo_sync(
-    command_file: Path = typer.Option(
-        Path("/opt/cstation/ansible_playbook/github/repo_odoo_sync.yaml"),
-        help="Sync Odoo Repositories from Github",
-        file_okay=True,  # Allow files
-        dir_okay=False,  # Disallow directories
-        readable=True,  # Ensure the file is readable
-    ),
-):
+def odoo_sync():
     """
-    Sync the Lcal Odoo repositories with the Github ANSIS repositories
-    Using /opt/cstation/ansible_playbook/github/repo_odoo_sync.yaml Playbook
+    Update Odoo repositories with ANSIS repositories @ Github ( Version 16.0 - 18.0 )
+    \n
+    Configuration File : /opt/cstation/ansible_playbook/github/repo_odoo_sync.yaml
     """
     result = ansible_runner.run(
         playbook="/opt/cstation/ansible_playbook/github/repo_odoo_sync.yaml",
     )
     print(result)
 
+
+@app.command()
+def odoo_oca_sync( version: str = typer.Option('16.0', "--version", "-v", help="Odoo Version => 16.0 - 18.0")):
+    """
+    Update Local Odoo OCA repositories/directories ( Version 16.0 - 18.0 )
+    """
+    print(f"VERSION: {version}")
+    result = ansible_runner.run(
+        playbook=f"/opt/cstation/ansible_playbook/github/repo_oca_sync_{version}.yaml",
+    )
+    print(result)
 
 if __name__ == "__main__":
     app()
