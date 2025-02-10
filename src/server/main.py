@@ -9,7 +9,9 @@ app = typer.Typer(no_args_is_help=True)
 
 @app.command()
 def list():
-    """List server from inventory"""
+    """
+        List server from inventory
+    """
     hosts_data = get_inventory_hosts()
     if not hosts_data:
         print("No server information found in inventory")
@@ -27,14 +29,22 @@ def list():
 
 
 @app.command(no_args_is_help=True)
-def ssh_setup(ssh_host: Annotated[str, typer.Argument(help="For Specific Host(s) or All")]):
-    print("Setting Up SSH Key to Remote Host...")
+def ssh_setup(
+    server: Annotated[
+        str, typer.Argument(help="server name or group name (All)")
+    ],
+):
+    """
+        Setting up SSH key for server(s) \n
+        For server name: cstation server list
+    """
+    print("Setting up SSH key to remote server ...")
     os.chdir('/opt/cstation/ansible_playbook/server/')
-    print(f'Setting Up SSH Connection for Host(s): {ssh_host}')
+    print(f'Setting up SSH connection for host(s): {server}')
     if ssh_host == "All":
-        os.system('ansible-playbook server_ssh.yaml')
+        os.system('ansible-playbook server_ssh.yml')
     else:
-        os.system(f'ansible-playbook -l {ssh_host} server_ssh.yaml')
+        os.system(f'ansible-playbook -l {server} server_ssh.yml')
 
 
 if __name__ == "__main__":
