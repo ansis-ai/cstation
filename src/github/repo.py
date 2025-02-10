@@ -45,5 +45,3 @@ def odoo_oca_sync( version: str = typer.Option('16.0', "--version", "-v", help="
 
 if __name__ == "__main__":
     app()
-
-

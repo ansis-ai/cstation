@@ -3,19 +3,16 @@
   local: 
 git@github.com:ansis-ai/account-financial-reporting.git -b 17.0
 
-
 git@github.com:ansis-ai/CybroAddons.git -b 15.0
 git@github.com:ansis-ai/CybroAddons.git -b 16.0
 git@github.com:ansis-ai/CybroAddons.git -b 17.0
 git@github.com:ansis-ai/CybroAddons.git -b 18.0
-
 
 git@github.com:ansis-ai/knowledge.git -b 16.0
 git@github.com:ansis-ai/knowledge.git -b 17.0
 
 git@github.com:ansis-ai/mukit-odoo-modules.git -b 17.0
 git@github.com:ansis-ai/mukit-odoo-modules.git -b 18.0
-
 
 git@github.com:ansis-ai/OpenUpgrade.git -b 14.0
 git@github.com:ansis-ai/OpenUpgrade.git -b 15.0
