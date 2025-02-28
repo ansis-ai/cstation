@@ -1,0 +1,51 @@
+#! /usr/local/bin/ansible-playbook
+---
+  - hosts: all
+    become: true
+    
+    tasks:
+      # Create machine for provision for Digital Ocean Droplet
+      # Install all the packages
+      
+      - name: Add Docker GPG apt Key
+        apt_key:
+          url: https://download.docker.com/linux/ubuntu/gpg
+          state: present
+
+      - name: Add Docker Repository
+        apt_repository:
+          repo: deb https://download.docker.com/linux/ubuntu focal stable
+          state: present
+
+      - name: Update apt and install required system packages
+        apt:
+          update_cache: yes
+          name: "{{ packages }}"
+          state: latest
+        vars:
+          packages:
+            - apt-transport-https
+            - ca-certificates
+            - curl
+            - software-properties-common
+            - python3-pip
+            - virtualenv
+            - python3-setuptools
+
+      - name: Install Docker packages
+        apt:
+          name: "{{ docker_packages }}"
+          state: latest
+          update_cache: yes
+        vars:
+          docker_packages:
+            - docker-ce
+            - docker-ce-cli
+            - containerd.io
+            - docker-buildx-plugin
+            - docker-compose-plugin
+            - python3-docker
+            - python3-psycopg2
+            - wget
+            - rsync
+

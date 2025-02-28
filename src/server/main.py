@@ -2,13 +2,11 @@ import os
 
 import typer
 from typing_extensions import Annotated
+import ansible_runner
 
 from utils import get_inventory_hosts
 
 app = typer.Typer(no_args_is_help=True, help="Server management commands")
-container_app = typer.Typer(help="Container management commands")
-app.add_typer(container_app, name="container")
-
 
 @app.command()
 def list():
@@ -30,22 +28,20 @@ def list():
             print(f"{host}: {display_host}  ({user}@{port})")
 
 
-@app.command(no_args_is_help=True)
-def ssh_setup(
-    server: Annotated[str, typer.Argument(help="server name or group name (All)")],
+@app.command()
+def setup(
+    server: Annotated[str, typer.Argument(help="Target server name from inventory")]
 ):
     """
-    Setting up SSH key for server(s) \n
-    For server name: cstation server list
+    Setup and configure a server with required packages and configurations
     """
-    print("Setting up SSH key to remote server ...")
-    os.chdir("/opt/cstation/ansible_playbook/server/")
-    print(f"Setting up SSH connection for host(s): {server}")
-    if server == "All":
-        os.system("ansible-playbook server_ssh.yml")
-    else:
-        os.system(f"ansible-playbook -l {server} server_ssh.yml")
-
+    print(f"Setting up server: {server}")
+    result = ansible_runner.run(
+        playbook="/opt/cstation/ansible_playbook/server/setup.yml",
+        limit=server,
+        private_data_dir="/tmp"
+    )
+    print(result)
 
 if __name__ == "__main__":
     app()

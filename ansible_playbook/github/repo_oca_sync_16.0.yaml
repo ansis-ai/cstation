@@ -1,6 +1,7 @@
 ---
 - name: Sync OCA GitHub (16.0) repositories to local development server
-  hosts: localhost
+  hosts: all
+  become: yes
   vars:
     repos:
 
@@ -78,6 +79,14 @@
         includes:
           - web_group_expand
           - web_notify
+
+     
+      - name: Apexive Odoo LLM - 16.0
+        fork_url: "https://github.com/apexive/odoo-llm.git"
+        local_dir: "/opt/PW/PW_ADDONS.6.0/OCA"
+        branch: "16.0"
+        includes:
+          - '*'
 
       - name: CybroSys Addons - 16.0
         fork_url: "https://github.com/CybroOdoo/CybroAddons.git"

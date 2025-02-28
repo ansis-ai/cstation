@@ -1,0 +1,50 @@
+---
+- name: Deploy Portainer Container
+  hosts: all
+  become: true
+  vars:
+    portainer_version: "{{ portainer_version | default('ce-latest') }}"
+    portainer_port: "{{ portainer_port | default(9000) }}"
+    portainer_container_name: "{{ portainer_container }}"
+
+  tasks:
+    - name: Check if Docker is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+      register: docker_status
+
+    - name: Wait for Docker daemon to be ready
+      ansible.builtin.wait_for:
+        path: /var/run/docker.sock
+        timeout: 30
+
+    - name: Verify Docker connection
+      community.docker.docker_ping:
+      register: docker_ping
+      retries: 5
+      delay: 10
+      until: docker_ping is success
+
+    - name: Create Portainer data directory
+      ansible.builtin.file:
+        path: "/var/lib/portainer/{{ inventory_hostname|upper }}/data"
+        state: directory
+        mode: '0755'
+
+    - name: Deploy Portainer container
+      community.docker.docker_container:
+        name: "{{ portainer_container | default('portainer') }}"
+        image: "portainer/portainer-{{ portainer_version }}"
+        state: started
+        restart_policy: always
+        ports:
+          - "{{ portainer_port }}:9000"
+          - "8000:8000"
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock:ro
+          - "/var/lib/portainer/{{ inventory_hostname|upper }}/data:/data"
+
+    - name: Display Portainer access information
+      debug:
+        msg: "Portainer is now available at http://{{ ansible_host }}:{{ portainer_port }}"

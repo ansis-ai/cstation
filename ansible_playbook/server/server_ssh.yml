@@ -1,6 +1,0 @@
----
-- name: SSH Configuration Playbook
-  hosts: all
-  gather_facts: false
-  roles:
-    - ssh_connection

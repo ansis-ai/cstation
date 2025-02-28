@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional
 from typing_extensions import Annotated
 
-app = typer.Typer()
+app = typer.Typer(no_args_is_help=True)
 
 
 def load_options(option_file: Path):
@@ -33,13 +33,18 @@ def odoo_sync():
 
 
 @app.command()
-def odoo_oca_sync( version: str = typer.Option('16.0', "--version", "-v", help="Odoo Version => 16.0 - 18.0")):
+def odoo_oca_sync(
+    version: str = typer.Option('16.0', "--version", "-v", help="Odoo Version => 16.0 - 18.0"),
+    server: str = typer.Option('localhost', "--server", "-s", help="Target server to sync OCA repositories")
+):
     """
     Update Local Odoo OCA repositories/directories ( Version 16.0 - 18.0 )
     """
+    print(f"SERVER: {server}")
     print(f"VERSION: {version}")
     result = ansible_runner.run(
         playbook=f"/opt/cstation/ansible_playbook/github/repo_oca_sync_{version}.yaml",
+        limit=server
     )
     print(result)
 

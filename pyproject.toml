@@ -12,6 +12,7 @@ dependencies = [
     "click>=8.1.7",
     "pyyaml>=6.0.2",
     "typer>=0.15.1",
+    "ansible-lint>=6.22.1",  # Add this line
 ]
 
 [build-system]
