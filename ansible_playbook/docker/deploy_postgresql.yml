@@ -1,0 +1,71 @@
+---
+- name: Deploy PostgreSQL Container
+  hosts: all
+  become: true
+  vars_files:
+    - "/Users/wsloh/cstation/config_file/{{ inventory_hostname }}/{{ postgresql_container }}.yml"
+
+  tasks:
+    - name: Check if Docker is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+      register: docker_status
+
+    - name: Wait for Docker daemon to be ready
+      ansible.builtin.wait_for:
+        path: /var/run/docker.sock
+        timeout: 30
+
+    - name: Create PostgreSQL data directory for {{ inventory_hostname|upper }}
+      ansible.builtin.file:
+        path: "/var/lib/postgresql/{{ inventory_hostname|upper }}/data"
+        state: directory
+        mode: '0755'
+
+    - name: Deploy PostgreSQL container {{ postgresql_container }} Version {{ postgresql_version }}
+      community.docker.docker_container:
+        name: "{{ postgresql_container }}"
+        image: "postgres:{{ postgresql_version }}"
+        state: started
+        restart_policy: always
+        env:
+          POSTGRES_USER: "{{ postgresql_user }}"
+          POSTGRES_PASSWORD: "{{ postgresql_password }}"
+        ports:
+          - "{{ postgresql_port }}:5432"
+        networks:
+          - name: "odoo_network"
+        volumes:
+          - "/var/lib/postgresql/{{ inventory_hostname|upper }}/data:/var/lib/postgresql/data"
+
+    - name: Ensure postgres user exists
+      ansible.builtin.user:
+        name: postgres
+        state: absent
+        shell: /bin/bash
+
+    - name: Prepare PostgreSQL Configuration File - {{ postgresql_config_file }}.j2
+      ansible.builtin.template:
+        src: "/opt/cstation/config_file/templates/{{ postgresql_config_file }}.j2"
+        dest: "/var/lib/postgresql/{{ inventory_hostname|upper }}/data/postgresql.auto.conf"
+        owner: 999
+        group: systemd-journal
+        mode: '0600'
+
+    - name: Stop PostgreSQL Container - {{ postgresql_container }}
+      community.docker.docker_container:
+        name: "{{ postgresql_container }}"
+        state: stopped
+
+    - name: Start PostgreSQL Container - {{ postgresql_container }}
+      community.docker.docker_container:
+        name: "{{ postgresql_container }}"
+        state: started
+
+    - name: Display PostgreSQL access information
+      debug:
+        msg: |
+          PostgreSQL is now available at {{ ansible_host }}:{{ postgresql_port }}
+          Username: {{ postgresql_user }}
+          Password: {{ postgresql_password }}

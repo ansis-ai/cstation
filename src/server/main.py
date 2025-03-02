@@ -1,8 +1,8 @@
 import os
+import subprocess
 
 import typer
 from typing_extensions import Annotated
-import ansible_runner
 
 from utils import get_inventory_hosts
 
@@ -36,12 +36,12 @@ def setup(
     Setup and configure a server with required packages and configurations
     """
     print(f"Setting up server: {server}")
-    result = ansible_runner.run(
-        playbook="/opt/cstation/ansible_playbook/server/setup.yml",
-        limit=server,
-        private_data_dir="/tmp"
-    )
-    print(result)
+    cmd = [
+        "ansible-playbook",
+        "/opt/cstation/ansible_playbook/server/setup.yml",
+        "-l", server
+    ]
+    subprocess.run(cmd)
 
 if __name__ == "__main__":
     app()

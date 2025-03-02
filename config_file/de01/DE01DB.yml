@@ -1,0 +1,15 @@
+---
+    # Define the customer information / configurations
+    #
+    #
+    
+    # Host Information
+
+    db_host: de01db.ansis.com.sg
+    postgresql_container_name: DE01DB
+    postgresql_port: 1488
+    postgresql_user: postgres
+    postgresql_password: wai39kua  # Password suffix
+    postgresql_version: 16    
+    postgresql_config_file: postgresql.auto.conf_8GB
+    

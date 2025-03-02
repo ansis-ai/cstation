@@ -36,5 +36,39 @@ def portainer(
     ]
     subprocess.run(cmd)
 
+@deploy_app.command()
+def postgresql(
+    server: Annotated[str, typer.Argument(help="Target server name from inventory")],
+    postgresql_config_file: Annotated[str, typer.Option("--config", "-c", help="PostgreSQL DB Config File")],
+):
+    """Deploy PostgreSQL container"""
+    print(f"Deploying PostgreSQL [{postgresql_config_file}] on server: {server}")
+    cmd = [
+        "ansible-playbook",
+        "/opt/cstation/ansible_playbook/docker/deploy_postgresql.yml",
+        "-l", server,
+    ]
+    subprocess.run(cmd)
+
+
+@deploy_app.command()
+def odoo(
+    server: Annotated[str, typer.Argument(help="Target server name from inventory")],
+    odoo_config_file: Annotated[
+        str, typer.Option("--config", "-c", help="Odoo Config File")
+    ],
+):
+    """Deploy Odoo application"""
+    print(f"Deploying Odoo [{odoo_config_file}] on server: {server}")
+    cmd = [
+        "ansible-playbook",
+        "/opt/cstation/ansible_playbook/docker/deploy_odoo.yml",
+        "-l",
+        server,
+        "-e",
+        f"odoo_config_file={odoo_config_file}",
+    ]
+    subprocess.run(cmd)
+
 if __name__ == "__main__":
     app()

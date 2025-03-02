@@ -1,6 +1,6 @@
 import typer
 import yaml
-import ansible_runner
+import subprocess
 
 from pathlib import Path
 from typing import Optional
@@ -26,10 +26,12 @@ def odoo_sync():
     \n
     Configuration File : /opt/cstation/ansible_playbook/github/repo_odoo_sync.yaml
     """
-    result = ansible_runner.run(
-        playbook="/opt/cstation/ansible_playbook/github/repo_odoo_sync.yaml",
-    )
-    print(result)
+    cmd = ["ansible-playbook", "/opt/cstation/ansible_playbook/github/repo_odoo_sync.yaml"]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    print(result.stdout)
+    if result.stderr:
+        print("Errors:")
+        print(result.stderr)
 
 
 @app.command()
@@ -42,11 +44,16 @@ def odoo_oca_sync(
     """
     print(f"SERVER: {server}")
     print(f"VERSION: {version}")
-    result = ansible_runner.run(
-        playbook=f"/opt/cstation/ansible_playbook/github/repo_oca_sync_{version}.yaml",
-        limit=server
-    )
-    print(result)
+    cmd = [
+        "ansible-playbook",
+        f"/opt/cstation/ansible_playbook/github/repo_oca_sync_{version}.yaml",
+        "--limit", server
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    print(result.stdout)
+    if result.stderr:
+        print("Errors:")
+        print(result.stderr)
 
 if __name__ == "__main__":
     app()

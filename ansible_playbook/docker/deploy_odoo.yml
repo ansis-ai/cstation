@@ -1,0 +1,76 @@
+---
+- name: Deploy Odoo Container
+  hosts: all
+  become: true
+  vars_files:
+    - "/Users/wsloh/cstation/config_file/{{ inventory_hostname }}/{{ odoo_container_name }}.yml"
+
+  tasks:
+    - name: Ensure Docker is installed
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker Compose is installed
+      apt:
+        name: docker-compose
+        state: present
+        update_cache: yes
+
+    - name: Create Odoo configuration directory
+      file:
+        path: /etc/odoo
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy Odoo configuration file
+      copy:
+        src: "{{ odoo_config_file }}"
+        dest: /etc/odoo/odoo.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Pull Odoo Docker image
+      docker_image:
+        name: odoo
+        source: pull
+
+    - name: Pull PostgreSQL Docker image
+      docker_image:
+        name: postgres
+        source: pull
+
+    - name: Run PostgreSQL container
+      docker_container:
+        name: odoo-db
+        image: postgres
+        state: started
+        restart_policy: always
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: odoo
+        ports:
+          - "5432:5432"
+
+    - name: Run Odoo container
+      docker_container:
+        name: odoo
+        image: odoo
+        state: started
+        restart_policy: always
+        env:
+          HOST: db
+          USER: odoo
+          PASSWORD: odoo
+          DB: odoo
+        volumes:
+          - /etc/odoo/odoo.conf:/etc/odoo/odoo.conf
+        ports:
+          - "8069:8069"
+        links:
+          - odoo-db:db

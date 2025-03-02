@@ -1,0 +1,32 @@
+---
+- name: Configure PostgreSQL
+  hosts: all
+  become: true
+  vars:
+    postgresql_config_path: "/etc/postgresql/{{ pg_version }}/main"
+    total_memory_gb: "{{ ansible_memtotal_mb / 1024 }}"
+  
+  tasks:
+    - name: Get PostgreSQL version
+      shell: psql --version | awk '{print $3}' | cut -d. -f1
+      register: pg_version_output
+      changed_when: false
+      
+    - name: Set PostgreSQL version
+      set_fact:
+        pg_version: "{{ pg_version_output.stdout }}"
+
+    - name: Create PostgreSQL configuration from template
+      template:
+        src: templates/postgresql.auto.conf.j2
+        dest: "{{ postgresql_config_path }}/postgresql.auto.conf"
+        owner: postgres
+        group: postgres
+        mode: '0600'
+      notify: restart postgresql
+
+  handlers:
+    - name: restart postgresql
+      service:
+        name: postgresql
+        state: restarted

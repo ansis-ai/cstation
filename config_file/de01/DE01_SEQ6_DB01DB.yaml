@@ -1,0 +1,48 @@
+# Define the customer information / configurations
+#
+#
+# Container Information ( Unique for each Container )
+odoo_container_name: SG08_SEQ6_SG08DB
+odoo_1_domain_name: erp.skinequality.com
+odoo_2_domain_name: erp.skinequality.com
+odoo_3_domain_name: erp.skinequality.com
+odoo_4_domain_name: erp.skinequality.com
+odoo_5_domain_name: erp.skinequality.com
+odoo_version: 6.0 # Perfectwork Version
+odoo_port: 3348 # Port linked to 8086
+odoo_websocket_port: 3347 # Websocket port linked to 8072
+odoo_polling_port: 3347 # PW container port used to map with 8072
+
+# Database Connection InformationInformation ( No need to change if on same host )
+odoo_db_hostname: de01.ansis.com.sg
+odoo_db_host: DE01_DB # Local Host --> odoo_DB, external same as odoo_db_hostname
+odoo_db_port: '5432' # Default 5432 for Postgresql, external then 1488
+odoo_db_user: "{{odoo_container_name|lower}}"
+odoo_db_password: wai39kua
+
+# Information for pw.conf for each atomic_container
+# Database Settings
+odoo_admin_passwd: Wengseng1@
+odoo_db_maxconn: 32 # Maximum database connection for container
+odoo_dbfilter: SEQ6*
+# Logging Settings
+odoo_log_level: info
+# Services Settings
+odoo_addons_path: /mnt, /mnt/perfectwork, mnt/customers, /mnt/OCA, /mnt/ENTERPRISE
+odoo_server_wide_modules: web
+# Email Settings
+
+# Tuning Options
+odoo_workers: 5
+odoo_max_cron_threads: 2
+odoo_limit_time_cpu: 1800
+odoo_limit_time_real: 3600
+odoo_limit_memory_soft: 1677721600
+odoo_limit_memory_hard: 1073741824
+odoo_limit_request: 8192
+
+# Traefik rules definitation for container
+traefik_enable: true
+http_router_service_rule: Host(`{{odoo_domain_name}}`)
+http_router_polling_service_rule: Host(`{{odoo_domain_name}}`) && PathPrefix(`/longpolling`)
+middleware_buffering_size: 2000000
