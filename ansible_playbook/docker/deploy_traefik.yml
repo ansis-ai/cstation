@@ -1,23 +1,22 @@
 ---
-- name: Install Traefik Reverse-Proxy V3
+- name: Deploy Traefik Container
   hosts: all
   become: true
+  vars:
+    traefik_version: "{{ traefik_version | latest }}"
+    traefik_http_port: "{{ traefik_http_port | 80 }}"
+    traefik_https_port: "{{ traefik_https_port | 443 }}"
+    traefik_dashboard_port: "{{ traefik_dashboard_port | 8080 }}"
+    traefik_network: odoo_network
+    config_dir: /var/lib/traefik/{{ inventory_hostname|upper }}
 
   tasks:
-    - name: Create PW_NET network
-      community.docker.docker_network:
-        name: PW_NET
-      docker_network:
-        name: PW_NET
-
-    - name: Configure TRAEFIK Reverse-Proxy Container
+    - name: "Deploy Traefik container - TRAEFIK_{{ inventory_hostname | upper }}"
       community.docker.docker_container:
-      docker_container:
-        name: "{{ inventory_hostname|upper }}_TRAEFIK"
-        image: traefik:v3
-        state: started
-        restart: yes
+        name: "TRAEFIK_{{ inventory_hostname | upper }}"
+        image: "traefik:{{ traefik_version }}"
         restart_policy: unless-stopped
+        state: started
         command:
           - "--api.insecure=true"
           - "--entryPoints.web.address=:80"
@@ -30,7 +29,7 @@
           - "--providers.docker=true"
           - "--providers.docker.watch=true"
           - "--providers.docker.exposedByDefault=false"
-          - "--providers.docker.network={{ docker_PW_network }}"
+          - "--providers.docker.network={{ traefik_network }}"
           - "--certificatesresolvers.le_resolver.acme.tlschallenge=true"
           - "--certificatesresolvers.le_resolver.acme.email=info@synercatalyst.com"
           - "--certificatesresolvers.le_resolver.acme.storage=/letsencrypt/acme.json"
@@ -40,6 +39,14 @@
           - "--certificatesresolvers.le_dns_resolver.acme.dnschallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
           - "--certificatesresolvers.le_dns_resolver.acme.email=info@synercatalyst.com"
           - "--certificatesresolvers.le_dns_resolver.acme.storage=/letsencrypt/acme_dns.json"
+        networks:
+          - name: "{{ traefik_network }}"
+        ports:
+          - "{{ traefik_http_port }}:{{ traefik_http_port }}"
+          - "{{ traefik_https_port }}:{{ traefik_https_port }}"
+          - "127.0.0.1:{{ traefik_dashboard_port }}:{{ traefik_dashboard_port }}"
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock:ro"
         labels:
           traefik.enable: "true"
           traefik.http.routers.{{ inventory_hostname|upper }}_TRAEFIK.rule: "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
@@ -51,19 +58,3 @@
           traefik.http.routers.http-catchall.rule: "hostregexp(`{host:.+}`)"
           traefik.http.routers.http-catchall.entrypoints: "web"
           traefik.http.routers.http-catchall.middlewares: "redirect-to-https"
-        volumes:
-          - "/var/run/docker.sock:/var/run/docker.sock:ro"
-          - "/var/lib/perfectwork/{{ inventory_hostname|upper }}/CONTAINERS/{{ inventory_hostname|upper }}_TRAEFIK:/etc/traefik"
-          - "/var/lib/perfectwork/{{ inventory_hostname|upper }}/CONTAINERS/{{ inventory_hostname|upper }}_TRAEFIK/letsencrypt:/letsencrypt"
-          - "/var/lib/perfectwork/{{ inventory_hostname|upper }}/CONTAINERS/{{ inventory_hostname|upper }}_TRAEFIK/conf:/conf"
-        networks:
-          - name: PW_NET
-        networks_cli_compatible: yes
-        ports:
-          - "80:80"
-          - "443:443"
-          - "5000:8080"
-        env:
-          DHPARAM_GENERATION: "false"
-          CF_API_EMAIL: syner.catalyst@gmail.com
-          CF_API_KEY: 923abedd02920ce74104a899309bec1434d0c

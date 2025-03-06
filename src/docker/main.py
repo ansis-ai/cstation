@@ -70,5 +70,26 @@ def odoo(
     ]
     subprocess.run(cmd)
 
+@deploy_app.command()
+def traefik(
+    server: Annotated[str, typer.Argument(help="Target server name from inventory")],
+    version: Annotated[str, typer.Option("--version", "-v", help="Traefik version")] = "latest",
+    http_port: Annotated[int, typer.Option("--http-port", help="HTTP port")] = 80,
+    https_port: Annotated[int, typer.Option("--https-port", help="HTTPS port")] = 443,
+    dashboard_port: Annotated[int, typer.Option("--dashboard-port", help="Dashboard port")] = 8080,
+):
+    """Deploy Traefik reverse proxy container"""
+    print(f"Deploying Traefik {version} on server: {server}")
+    cmd = [
+        "ansible-playbook",
+        "/opt/cstation/ansible_playbook/docker/deploy_traefik.yml",
+        "-l", server,
+        "-e", f"traefik_version={version}",
+        "-e", f"traefik_http_port={http_port}",
+        "-e", f"traefik_https_port={https_port}",
+        "-e", f"traefik_dashboard_port={dashboard_port}"
+    ]
+    subprocess.run(cmd)
+
 if __name__ == "__main__":
     app()

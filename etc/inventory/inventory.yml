@@ -100,6 +100,7 @@ SYC_SGP:
             ansible_host: sg01.synercatalyst.com
             ansible_user: root
             ansible_port: 8288
+            docker_PW_network: PW_NET
             traefik_container: SG01_TRAEFIK
             traefik_pilot_token: ec8dee08-94be-4ce1-a8a6-2a2d2f0b8af8
             portainer_container: SG01_PORTAINER
@@ -108,6 +109,9 @@ SYC_SGP:
             postgresql_version: 14
             postgresql_config_file : postgresql.auto.conf_16GB.j2
             ansible_python_interpreter: /usr/bin/python3
+            postgresql_port: 1488
+            postgresql_db_admin: postgres
+            postgresql_db_password: wai39kua
         sg02:
             ansible_host: sg02.synercatalyst.com
             ansible_user: root

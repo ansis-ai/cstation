@@ -17,13 +17,13 @@
         path: /var/run/docker.sock
         timeout: 30
 
-    - name: Create PostgreSQL data directory for {{ inventory_hostname|upper }}
+    - name: Create PostgreSQL data directory for {{ inventory_hostname | upper }}
       ansible.builtin.file:
-        path: "/var/lib/postgresql/{{ inventory_hostname|upper }}/data"
+        path: "/var/lib/postgresql/{{ postgresql_container }}/data"
         state: directory
         mode: '0755'
 
-    - name: Deploy PostgreSQL container {{ postgresql_container }} Version {{ postgresql_version }}
+    - name: "Deploy PostgreSQL container Version"
       community.docker.docker_container:
         name: "{{ postgresql_container }}"
         image: "postgres:{{ postgresql_version }}"
@@ -37,7 +37,7 @@
         networks:
           - name: "odoo_network"
         volumes:
-          - "/var/lib/postgresql/{{ inventory_hostname|upper }}/data:/var/lib/postgresql/data"
+          - "/var/lib/postgresql/{{ postgresql_container }}/data:/var/lib/postgresql/data"
 
     - name: Ensure postgres user exists
       ansible.builtin.user:
@@ -45,10 +45,10 @@
         state: absent
         shell: /bin/bash
 
-    - name: Prepare PostgreSQL Configuration File - {{ postgresql_config_file }}.j2
+    - name: "Prepare PostgreSQL Configuration File - {{ postgresql_config_file }}"
       ansible.builtin.template:
-        src: "/opt/cstation/config_file/templates/{{ postgresql_config_file }}.j2"
-        dest: "/var/lib/postgresql/{{ inventory_hostname|upper }}/data/postgresql.auto.conf"
+        src: "/opt/cstation/templates/{{ postgresql_config_file }}"
+        dest: "/var/lib/postgresql/{{ inventory_hostname | upper }}/data/postgresql.auto.conf"
         owner: 999
         group: systemd-journal
         mode: '0600'
@@ -64,7 +64,7 @@
         state: started
 
     - name: Display PostgreSQL access information
-      debug:
+      ansible.builtin.debug:
         msg: |
           PostgreSQL is now available at {{ ansible_host }}:{{ postgresql_port }}
           Username: {{ postgresql_user }}

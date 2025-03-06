@@ -1,36 +1,37 @@
 #! /usr/local/bin/ansible-playbook
 ---
-  - hosts: all
-    become: true
-    
-    tasks:
-      # Create machine for provision for Digital Ocean Droplet
-      # Install all the packages
-      
-      - name: Add Docker GPG apt Key
-        apt_key:
-          url: https://download.docker.com/linux/ubuntu/gpg
-          state: present
+- name: Setup Server ( New VPS )
+  hosts: all
+  become: true
 
-      - name: Add Docker Repository
-        apt_repository:
-          repo: deb https://download.docker.com/linux/ubuntu focal stable
-          state: present
+  tasks:
+    # Create machine for provision for Digital Ocean Droplet
+    # Install all the packages
 
-      - name: Update apt and install required system packages
-        apt:
-          update_cache: yes
-          name: "{{ packages }}"
-          state: latest
-        vars:
-          packages:
-            - apt-transport-https
-            - ca-certificates
-            - curl
-            - software-properties-common
-            - python3-pip
-            - virtualenv
-            - python3-setuptools
-            - wget
-            - rsync
+    - name: Add Docker GPG apt Key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
 
+    - name: Add Docker Repository
+      ansible.builtin.apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Update apt and install required system packages
+      ansible.builtin.apt:
+        update_cache: true
+        name: "{{ packages }}"
+        state: present
+
+      vars:
+        packages:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+          - wget
+          - rsync

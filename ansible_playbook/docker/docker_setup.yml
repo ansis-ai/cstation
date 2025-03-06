@@ -43,14 +43,14 @@
           - docker-buildx-plugin
           - docker-compose-plugin
         state: present
-        update_cache: yes
+        update_cache: true
       when: ansible_os_family == "Debian"
 
     - name: Ensure Docker service is running
       ansible.builtin.service:
         name: docker
         state: started
-        enabled: yes
+        enabled: true
 
     - name: Create Docker config directory
       ansible.builtin.file:
@@ -75,7 +75,7 @@
       ansible.builtin.systemd:
         name: docker
         state: restarted
-        daemon_reload: yes
+        daemon_reload: true
 
     - name: Wait for Docker to be ready
       ansible.builtin.wait_for:
@@ -83,5 +83,5 @@
         timeout: 30
 
     - name: Create Odoo Docker network
-      docker_network:
+      community.docker.docker_network:
         name: odoo_network
