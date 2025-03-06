@@ -5,7 +5,7 @@ then
     echo "./docker_build_container 6.0:latest"
     echo ""
 else
-    echo "Building PW $1 Docker Image (AMD-64 and ARM64)"
+    echo "Building PW $1 Docker Image (AMD64 and ARM64)"
     docker buildx build --platform linux/amd64,linux/arm64 -t synercatalyst/perfectwork:$1 --push .
     # docker push synercatalyst/perfectwork$1
     echo ""

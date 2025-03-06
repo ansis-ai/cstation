@@ -76,7 +76,7 @@ def traefik(
     version: Annotated[str, typer.Option("--version", "-v", help="Traefik version")] = "latest",
     http_port: Annotated[int, typer.Option("--http-port", help="HTTP port")] = 80,
     https_port: Annotated[int, typer.Option("--https-port", help="HTTPS port")] = 443,
-    dashboard_port: Annotated[int, typer.Option("--dashboard-port", help="Dashboard port")] = 8080,
+    dashboard_port: Annotated[int, typer.Option("--dashboard-port", help="Dashboard port")] = 5000,
 ):
     """Deploy Traefik reverse proxy container"""
     print(f"Deploying Traefik {version} on server: {server}")
