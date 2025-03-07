@@ -18,16 +18,14 @@ ANSIS_DEU:
         ansible_user: root
         postgresql_db_admin: postgres
         postgresql_db_password: wai39kua
-        docker_PW_network: PW_NET
+        odoo_pw_network: odoo_pw_network
         postgresql_port: 1488
     hosts:
         de01:
             ansible_host: de01.ansis.com.sg
             traefik_container: DE01_TRAEFIK
             portainer_container: DE01_PORTAINER
-            postgresql_container: DE01DB
-            postgresql_docker_image : postgres:16
-            postgresql_config_file : postgresql.auto.conf_16GB.j2
+            postgresql_container: DE01_DB            
             ansible_python_interpreter: /usr/bin/python3        
 
 ANSIS_SGP:
@@ -35,7 +33,7 @@ ANSIS_SGP:
         ansible_user: root
         postgresql_db_admin: postgres
         postgresql_db_password: wai39kua
-        docker_PW_network: PW_NET
+        odoo_pw_network: odoo_pw_network
         postgresql_port: 1488
     hosts:
         sg05:
@@ -54,6 +52,13 @@ ANSIS_SGP:
             postgresql_docker_image : postgres:16
             postgresql_config_file : postgresql.auto.conf_8GB.j2
             ansible_python_interpreter: /usr/bin/python3
+        sg09:
+            ansible_host: sg09.ansis.com.sg
+            traefik_container: SG09_TRAEFIK
+            portainer_container: SG09_PORTAINER
+            postgresql_container: SG09_DB            
+            ansible_python_interpreter: /usr/bin/python3        
+
         vars:
             ansible_user: root
             ansible_port: 22

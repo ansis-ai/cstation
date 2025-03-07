@@ -73,7 +73,7 @@ RUN npm install -g rtlcss \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Odoo
-ENV ODOO_VERSION 16.0
+ENV ODOO_VERSION=16.0
 ARG ODOO_RELEASE=20250218
 ARG ODOO_SHA=b95e7c08cfdb8d0d25a2016cc5ef295e283da96b
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
@@ -86,16 +86,16 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
 COPY ./wait-for-psql.py /
-COPY ./requirements.txt /
+COPY ./requirements.txt /requirements.txt
 
-# **** Install extra python libraries for PW ****
-# RUN set -x; \
-#     pip3 install --no-cache-dir -r /requirements.txt 
+# **** Install extra python libraries for PerfectWork ****
+RUN pip install --no-cache-dir --break-system-packages --ignore-installed --upgrade -r /requirements.txt 
 
 # Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN chown odoo /entrypoint.sh \
     && mkdir -p /mnt \
-    && chown -R odoo /mnt
+    && chown -R odoo /mnt \
+    && chown -R odoo:odoo /var/lib/odoo 
 
 VOLUME ["/var/lib/odoo", "/mnt", "/usr/lib/python3/dist-packages/odoo"]
 
@@ -103,12 +103,13 @@ VOLUME ["/var/lib/odoo", "/mnt", "/usr/lib/python3/dist-packages/odoo"]
 EXPOSE 8069 8071 8072
 
 # Set the default config file
-ENV ODOO_RC /var/lib/odoo/pw.conf
+ENV ODOO_RC=/var/lib/odoo/pw.conf
 
 COPY wait-for-psql.py /usr/local/bin/wait-for-psql.py
 
 RUN chmod +x entrypoint.sh \
-    && chmod 755 /usr/local/bin/wait-for-psql.py
+    && chmod 755 /usr/local/bin/wait-for-psql.py 
+
 
 # Set default user when running the container
 USER odoo

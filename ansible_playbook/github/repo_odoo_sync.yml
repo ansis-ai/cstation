@@ -16,31 +16,31 @@
       - name: Odoo 16
         fork_url: "git@github.com:ansis-ai/odoo"
         local_dir: "/opt/PW/PW.6.0"
-        branch: "16.0" 
+        branch: "16.0"
 
       - name: OpenUpgrade 17.0
         fork_url: "git@github.com:ansis-ai/OpenUpgrade.git"
         local_dir: "/opt/PW/OpenUpgrade_17.0"
-        branch: "17.0" 
+        branch: "17.0"
 
       - name: OpenUpgrade 16.0
         fork_url: "git@github.com:ansis-ai/OpenUpgrade.git"
         local_dir: "/opt/PW/OpenUpgrade_16.0"
-        branch: "16.0" 
+        branch: "16.0"
 
       - name: OpenUpgrade 15.0
         fork_url: "git@github.com:ansis-ai/OpenUpgrade.git"
         local_dir: "/opt/PW/OpenUpgrade_15.0"
-        branch: "15.0" 
+        branch: "15.0"
 
       - name: OpenUpgrade 14.0
         fork_url: "git@github.com:ansis-ai/OpenUpgrade.git"
         local_dir: "/opt/PW/OpenUpgrade_14.0"
-        branch: "14.0" 
+        branch: "14.0"
 
   tasks:
     - name: Sync each repository with upstream
-      include_tasks: _repo_sync.yaml
+      ansible.builtin.include_tasks: _repo_sync.yml
       loop: "{{ repos }}"
       loop_control:
         loop_var: repo

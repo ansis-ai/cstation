@@ -1,0 +1,43 @@
+- url: https://github.com/muk-it/odoo-modules.git
+  branch: 18.0
+  includes:
+    - muk_contacts
+    - muk_product
+    - muk_web_appsbar
+    - muk_web_colors
+    - muk_web_appsbar
+    - muk_web_chatter
+    - muk_web_dialog
+    - muk_web_chatter
+    - muk_mail_route
+    - muk_web_utils
+    - muk_web_theme
+
+- url: https://github.com/OCA/queue.git
+  branch: 18.0
+  includes:
+    - queue_job
+    - queue_job_cron_jobrunner
+
+- url: https://github.com/OCA/reporting-engine.git
+  branch: 18.0
+  includes:
+    - report_xlsx
+    - report_xlsx_helper
+
+
+- url: https://github.com/OCA/server-tools.git
+  branch: 18.0
+  includes:
+    - auto_backup
+    - database_cleanup
+    - upgrade_analysis
+
+- url: https://github.com/CybroOdoo/CybroAddons.git
+  branch: 18.0
+  includes:
+    - base_accounting_kit
+    - base_account_budget
+    - base_advanced_report_templates
+    - dynamic_accounts_report
+    - sales_order_delivery_status

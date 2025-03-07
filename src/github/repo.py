@@ -24,9 +24,9 @@ def odoo_sync():
     """
     Update Odoo repositories with ANSIS repositories @ Github ( Version 16.0 - 18.0 )
     \n
-    Configuration File : /opt/cstation/ansible_playbook/github/repo_odoo_sync.yaml
+    Configuration File : /opt/cstation/ansible_playbook/github/repo_odoo_sync.yml
     """
-    cmd = ["ansible-playbook", "/opt/cstation/ansible_playbook/github/repo_odoo_sync.yaml"]
+    cmd = ["ansible-playbook", "/opt/cstation/ansible_playbook/github/repo_odoo_sync.yml"]
     result = subprocess.run(cmd, capture_output=True, text=True)
     print(result.stdout)
     if result.stderr:
@@ -36,19 +36,31 @@ def odoo_sync():
 
 @app.command()
 def odoo_oca_sync(
-    version: str = typer.Option('16.0', "--version", "-v", help="Odoo Version => 16.0 - 18.0"),
-    server: str = typer.Option('localhost', "--server", "-s", help="Target server to sync OCA repositories")
+    version: str = typer.Option('6.0', "--version", "-v", help="Odoo Version => 6.0 - 18.0"),
 ):
     """
-    Update Local Odoo OCA repositories/directories ( Version 16.0 - 18.0 )
+    Update Odoo OCA repositories/directories ( Version 16.0 - 18.0 )
     """
-    print(f"SERVER: {server}")
-    print(f"VERSION: {version}")
     cmd = [
-        "ansible-playbook",
-        f"/opt/cstation/ansible_playbook/github/repo_oca_sync_{version}.yaml",
-        "--limit", server
+        "gitoo",
+        "install-all",
+        f"--conf_file=/opt/cstation/config_file/odoo_oca/{version}.yml",
+        f"--destination=/opt/PW/PW_ADDONS.{version}/OCA",
     ]
+    with subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,  # Combine stdout and stderr
+        text=True,
+        bufsize=1
+    ) as proc:
+        for line in proc.stdout:
+            print(line, end='')
+
+        proc.wait()
+        if proc.returncode != 0:
+            print(f"Command failed with exit code {proc.returncode}")
+    
     result = subprocess.run(cmd, capture_output=True, text=True)
     print(result.stdout)
     if result.stderr:

@@ -5,7 +5,6 @@
   vars:
     traefik_version: "{{ traefik_version | latest }}"
     traefik_dashboard_port: "{{ traefik_dashboard_port | 9000 }}"
-    traefik_network: odoo_network
     config_dir: /var/lib/traefik/{{ inventory_hostname|upper }}
 
   tasks:
@@ -30,7 +29,7 @@
           - "--providers.file.watch=true"
           - "--providers.docker=true"
           - "--providers.docker.exposedByDefault=false"
-          - "--providers.docker.network={{ traefik_network }}"
+          - "--providers.docker.network={{ odoo_pw_network }}"
           - "--certificatesresolvers.le_resolver.acme.httpchallenge=true"  # Replaced tlschallenge with httpchallenge
           - "--certificatesresolvers.le_resolver.acme.email=info@synercatalyst.com"
           - "--certificatesresolvers.le_resolver.acme.storage=/letsencrypt/acme.json"
@@ -39,7 +38,7 @@
           - "--certificatesresolvers.le_resolver.acme.dnschallenge.delaybeforecheck=15"
           - "--certificatesresolvers.le_resolver.acme.dnschallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
         networks:
-          - name: "{{ traefik_network }}"
+          - name: "{{ odoo_pw_network }}"
         ports:
           - "80:80"
           - "443:443"

@@ -54,19 +54,17 @@ def postgresql(
 @deploy_app.command()
 def odoo(
     server: Annotated[str, typer.Argument(help="Target server name from inventory")],
-    odoo_config_file: Annotated[
+    odoo_container_name: Annotated[
         str, typer.Option("--config", "-c", help="Odoo Config File")
     ],
 ):
     """Deploy Odoo application"""
-    print(f"Deploying Odoo [{odoo_config_file}] on server: {server}")
+    print(f"Deploying Odoo [{odoo_container_name}] on server: {server}")
     cmd = [
         "ansible-playbook",
         "/opt/cstation/ansible_playbook/docker/deploy_odoo.yml",
-        "-l",
-        server,
-        "-e",
-        f"odoo_config_file={odoo_config_file}",
+        "-l", server,
+        "-e", f"odoo_container_name={odoo_container_name}"
     ]
     subprocess.run(cmd)
 

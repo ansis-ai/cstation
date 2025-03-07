@@ -87,16 +87,17 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
 COPY ./wait-for-psql.py /
-COPY ./requirements.txt /
+COPY ./requirements.txt /requirements.txt
 
 # **** Install extra python libraries for PW ****
-# RUN set -x; \
-#     pip install --no-cache-dir -r /requirements.txt 
+RUN set -x; \
+    pip install --no-cache-dir --break-system-packages  --ignore-installed -r /requirements.txt 
 
 # Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN chown odoo /entrypoint.sh \
     && mkdir -p /mnt \
-    && chown -R odoo /mnt
+    && chown -R odoo /mnt \
+    && chown -R odoo /var/lib/odoo 
 
 VOLUME ["/var/lib/odoo", "/mnt", "/usr/lib/python3/dist-packages/odoo"]
 

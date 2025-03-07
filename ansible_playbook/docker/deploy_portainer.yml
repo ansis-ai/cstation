@@ -5,26 +5,26 @@
   vars:
     portainer_container_name: "{{ portainer_container }}"
   tasks:
-    - name: Check if Docker is running
-      ansible.builtin.service:
-        name: docker
-        state: started
-      register: docker_status
+    # - name: Check if Docker is running
+    #   ansible.builtin.service:
+    #     name: docker
+    #     state: started
+    #   register: docker_status
 
-    - name: Wait for Docker daemon to be ready
-      ansible.builtin.wait_for:
-        path: /var/run/docker.sock
-        timeout: 30
+    # - name: Wait for Docker daemon to be ready
+    #   ansible.builtin.wait_for:
+    #     path: /var/run/docker.sock
+    #     timeout: 30
 
     - name: Create Portainer data directory
       ansible.builtin.file:
-        path: "/var/lib/portainer/{{ portainer_container |upper }}/"
+        path: "/var/lib/portainer/{{ portainer_container | upper }}/"
         state: directory
         mode: '0755'
 
     - name: Deploy Portainer container
       community.docker.docker_container:
-        name: "{{ portainer_container | default('portainer') }}"
+        name: "{{ portainer_container | upper }}"
         image: "portainer/portainer-ce:latest"
         state: started
         restart_policy: always
@@ -33,11 +33,10 @@
           - "8000:8000"
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock:ro
-          - "/var/lib/portainer/{{ portainer_container |upper }}/data:/data"
+          - "/var/lib/portainer/{{ portainer_container | upper }}/data:/data"
         networks:
-          - name: "odoo_network"
+          - name: "{{ odoo_pw_network }}"
 
-          
     - name: Display Portainer access information
-      debug:
+      ansible.builtin.debug:
         msg: "Portainer is now available at http://{{ ansible_host }}:{{ portainer_port }}"

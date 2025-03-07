@@ -9,9 +9,9 @@ odoo_3_domain_name: erp.skinequality.com
 odoo_4_domain_name: erp.skinequality.com
 odoo_5_domain_name: erp.skinequality.com
 odoo_version: 6.0 # Perfectwork Version
-odoo_port: 3348 # Port linked to 8086
-odoo_websocket_port: 3347 # Websocket port linked to 8072
-odoo_polling_port: 3347 # PW container port used to map with 8072
+odoo_port: 3318 # Port linked to 8086
+odoo_websocket_port: 3317 # Websocket port linked to 8072
+odoo_polling_port: 3317 # PW container port used to map with 8072
 
 # Database Connection InformationInformation ( No need to change if on same host )
 odoo_db_hostname: de01.ansis.com.sg

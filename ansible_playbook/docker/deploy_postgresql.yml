@@ -6,16 +6,16 @@
     - "/Users/wsloh/cstation/config_file/{{ inventory_hostname }}/{{ postgresql_container }}.yml"
 
   tasks:
-    - name: Check if Docker is running
-      ansible.builtin.service:
-        name: docker
-        state: started
-      register: docker_status
+    # - name: Check if Docker is running
+    #   ansible.builtin.service:
+    #     name: docker
+    #     state: started
+    #   register: docker_status
 
-    - name: Wait for Docker daemon to be ready
-      ansible.builtin.wait_for:
-        path: /var/run/docker.sock
-        timeout: 30
+    # - name: Wait for Docker daemon to be ready
+    #   ansible.builtin.wait_for:
+    #     path: /var/run/docker.sock
+    #     timeout: 30
 
     - name: Create PostgreSQL data directory for {{ inventory_hostname | upper }}
       ansible.builtin.file:
@@ -23,7 +23,12 @@
         state: directory
         mode: '0755'
 
-    - name: "Deploy PostgreSQL container Version"
+    # Dynamically include the vars file
+    - name: Load POSTGRESQL configuration file for {{ postgresql_container }}
+      ansible.builtin.include_vars:
+        file: "/opt/cstation/config_file/{{ inventory_hostname }}/{{ postgresql_container }}.yml"
+
+    - name: Deploy PostgreSQL container - {{ postgresql_container }}
       community.docker.docker_container:
         name: "{{ postgresql_container }}"
         image: "postgres:{{ postgresql_version }}"
@@ -35,7 +40,7 @@
         ports:
           - "{{ postgresql_port }}:5432"
         networks:
-          - name: "odoo_network"
+          - name: "{{ odoo_pw_network }}"
         volumes:
           - "/var/lib/postgresql/{{ postgresql_container }}/data:/var/lib/postgresql/data"
 
@@ -48,7 +53,7 @@
     - name: "Prepare PostgreSQL Configuration File - {{ postgresql_config_file }}"
       ansible.builtin.template:
         src: "/opt/cstation/templates/{{ postgresql_config_file }}"
-        dest: "/var/lib/postgresql/{{ inventory_hostname | upper }}/data/postgresql.auto.conf"
+        dest: "/var/lib/postgresql/{{ postgresql_container }}/data/postgresql.auto.conf"
         owner: 999
         group: systemd-journal
         mode: '0600'
