@@ -1,14 +1,12 @@
 cairosvg
-click-odoo
+cryptography
 lottie
 markdown
 odooly
 openai
 openupgradelib
 pw_zoomus
-paramiko
-PyPDF2==1.26.0
 pyOpenSSL
 html2text
-pysftp==0.2.8
+pysftp
 python-telegram-bot 

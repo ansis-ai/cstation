@@ -44,7 +44,7 @@ def odoo_oca_sync(
     cmd = [
         "gitoo",
         "install-all",
-        f"--conf_file=/opt/cstation/config_file/odoo_oca/{version}.yml",
+        f"--conf_file=/opt/PW/PW_ADDONS.{version}/OCA/{version}.yml",
         f"--destination=/opt/PW/PW_ADDONS.{version}/OCA",
     ]
     with subprocess.Popen(
