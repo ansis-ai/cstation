@@ -5,8 +5,8 @@
     
     # Host Information
 
-    db_host: sg09.ansis.com.sg
-    postgresql_container_name: SG09_DB
+    db_host: sg06.ansis.com.sg
+    postgresql_container_name: SG06_DB
     postgresql_port: 1488
     postgresql_user: postgres
     postgresql_password: wai39kua  # Password suffix

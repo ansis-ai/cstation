@@ -1,16 +1,16 @@
 http:
   # Add the router
   routers:
-    {{ odoo_domain_name }}_websocket:
+    {{ odoo_1_domain_name }}_websocket:
       entryPoints:
       - web
       - websecure
-      service: {{ odoo_domain_name }}_websocket_service
-      rule: Path(`/websocket`) && Host(`{{ odoo_domain_name }}`) 
+      service: {{ odoo_1_domain_name }}_websocket_service
+      rule: Path(`/websocket`) && Host(`{{ odoo_1_domain_name }}`) 
       tls:
         certResolver: le_resolver
   services:
-    {{ odoo_domain_name }}_websocket_service:
+    {{ odoo_1_domain_name }}_websocket_service:
       loadBalancer:
         servers:
-          -  url: "http://{{odoo_domain_name}}:{{ odoo_websocket_port }}"
+          -  url: "http://{{odoo_1_domain_name}}:{{ odoo_websocket_port }}"

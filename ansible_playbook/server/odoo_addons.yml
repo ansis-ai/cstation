@@ -1,0 +1,24 @@
+---
+- name: Odoo Setup and Deployment
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Ensure Perfectwork directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - "/var/lib/perfectwork/PW.{{ odoo_version }}"
+        - "/var/lib/perfectwork/PW_ADDONS.{{ odoo_version }}"
+
+    - name: Odoo ADDONS files to remote server - {{ ansible_host }}
+      ansible.posix.synchronize:
+        src: "/opt/PW/PW_ADDONS.{{ odoo_version }}/"
+        dest: "/var/lib/perfectwork/PW_ADDONS.{{ odoo_version }}"
+        delete: true
+        copy_links: true
+        rsync_opts:
+          - "--exclude=.*"
+          - "--chmod=u=rwX,g=rX,o=rX"

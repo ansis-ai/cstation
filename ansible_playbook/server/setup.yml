@@ -33,6 +33,6 @@
           - python3-psycopg2
           - python3-setuptools
           - rsync
-          - software-properties-commone
+          - software-properties-common
           - virtualenv
           - wget

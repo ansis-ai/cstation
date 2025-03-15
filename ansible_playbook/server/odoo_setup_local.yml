@@ -1,0 +1,55 @@
+---
+- name: Synchronize Odoo Repository and PW_ADDONS files
+  hosts: localhost
+  become: false
+
+  tasks:
+    # - name: Remove local Odoo /tmp directory
+    #   ansible.builtin.file:
+    #     path: "/tmp/PW.{{ odoo_version }}"
+    #     state: absent
+
+    - name: Sync from /opt/PW/ to /tmp - Odoo {{ odoo_version }}
+      ansible.posix.synchronize:
+        src: "/opt/PW/PW.{{ odoo_version }}/"
+        dest: "/tmp/PW.{{ odoo_version }}/"
+        delete: true
+        recursive: true
+        rsync_opts:
+          - "--exclude=.*"
+          - "-avzhe"
+
+    - name: Reorganize addons directory
+      block:
+        - name: Check if addons directory exists
+          ansible.builtin.stat:
+            path: /tmp/PW.{{ odoo_version }}/odoo/addons
+          register: addons_dir
+
+        - name: Copy /odoo/addons to /addons location and set permissions
+          ansible.builtin.copy:
+            src: "/tmp/PW.{{ odoo_version }}/odoo/addons/"
+            dest: "/tmp/PW.{{ odoo_version }}/addons"
+            mode: '0755'
+            follow: true
+            remote_src: true
+          when: addons_dir.stat.exists
+
+        - name: Remove original addons directory
+          ansible.builtin.file:
+            path: "/tmp/PW.{{ odoo_version }}/odoo/addons"
+            state: absent
+
+        - name: Check if temp addons exists
+          ansible.builtin.stat:
+            path: /tmp/PW.{{ odoo_version }}/addons
+          register: temp_addons
+
+        - name: Move /addons back to /odoo/addons if needed
+          ansible.builtin.command:
+            cmd: "mv /tmp/PW.{{ odoo_version }}/addons /tmp/PW.{{ odoo_version }}/odoo/"
+          when: temp_addons.stat.exists
+
+        - name: Move /addons back to /odoo/addons if needed
+          ansible.builtin.command:
+            cmd: "find ./ -name __pycache__ -type d -exec rm -rf {} + "
