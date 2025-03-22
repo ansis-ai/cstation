@@ -1,8 +1,48 @@
 ---
-- name: Run a gh command to sync {{ repo.fork_url }} at Github repositories from upstream
-  ansible.builtin.shell: gh repo sync {{ repo.fork_url }} -b {{ repo.branch }}
+- name: Ensure local repository directory exists with correct permissions
+  ansible.builtin.file:
+    path: "{{ repo.local_dir }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Check if upstream remote exists
+  ansible.builtin.git:
+    repo: "{{ repo.local_dir }}"
+    remote: upstream
+    list_only: true
+  register: git_remotes
+
+- name: Add upstream remote
+  ansible.builtin.git:
+    repo: "{{ repo.upstream_url }}"
+    dest: "{{ repo.local_dir }}"
+    remote: upstream
+    update: true
+  when: "'upstream' not in git_remotes.stdout"
+
+- name: Fetch upstream changes
+  ansible.builtin.git:
+    repo: "{{ repo.upstream_url }}"
+    dest: "{{ repo.local_dir }}"
+    fetch: yes
+    force: yes
+    remote: upstream
+
+- name: Check if upstream has new commits
+  ansible.builtin.git:
+    repo: "{{ repo.local_dir }}"
+    exec: "rev-list HEAD..upstream/{{ repo.branch }} --count"
+  register: upstream_ahead
+  changed_when: false
+  ignore_errors: true
+
+- name: Merge upstream changes
+  ansible.builtin.git:
+    repo: "{{ repo.local_dir }}"
+    remote: upstream
+    version: "{{ repo.branch }}"
+    merge: yes
+  when: upstream_ahead.stdout|int > 0
   
-- name: Ensure the Github repository {{ repo.fork_url }} {{ repo.branch }} is cloned to {{ repo.local_dir }}
-  ansible.builtin.shell:
-    cmd: git pull
-    chdir: "{{ repo.local_dir }}"

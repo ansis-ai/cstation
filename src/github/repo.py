@@ -17,21 +17,51 @@ def load_options(option_file: Path):
         with open(option_file, "r") as file:
             print(f"Loading options from {option_file}")
             return yaml.safe_load(file)
-    
+
+def load_odoo_repos(odoo_repo_path: Path):
+    with open(odoo_repo_path) as f:
+        data = yaml.safe_load(f)
+        return data[0]["vars"]["repos"]  # Assumes first play contains repo definitions
+
 
 @app.command()
-def odoo_sync():
+def odoo_sync(odoo_repo_path: Path = Path("/opt/cstation/etc/repo_odoo_sync.yml")):
     """
     Update Odoo repositories with ANSIS repositories @ Github ( Version 16.0 - 18.0 )
     \n
     Configuration File : /opt/cstation/ansible_playbook/github/repo_odoo_sync.yml
     """
-    cmd = ["ansible-playbook", "/opt/cstation/ansible_playbook/github/repo_odoo_sync.yml"]
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    print(result.stdout)
-    if result.stderr:
-        print("Errors:")
-        print(result.stderr)
+    repos = load_odoo_repos(odoo_repo_path)
+    for repo in repos:
+        typer.echo(f"\nSyncing {repo['name']}...")
+        
+        # Sync using GitHub CLI
+        try:
+            subprocess.run([
+                "gh", "repo", "sync",
+                "--source", repo["upstream_url"],
+                "--branch", repo["branch"],
+                repo["fork_url"]
+            ], check=True)
+            typer.echo(f"✅ Remote sync completed - {repo['name']}")
+        except subprocess.CalledProcessError as e:
+            typer.echo(f"❌ Remote sync failed: {e}", err=True)
+            continue
+
+        # Update local repository
+        try:
+            subprocess.run(
+                ["git", "pull"],
+                cwd=repo["local_dir"],
+                check=True
+            )
+            typer.echo(
+                f"✅ Local pull completed for {repo['name']} {repo['local_dir']}"
+            )
+        except subprocess.CalledProcessError as e:
+            typer.echo(f"❌ Local pull failed: {e}", err=True)
+
+
 
 
 @app.command()
