@@ -1,0 +1,34 @@
+---
+- name: Odoo Setup and Deployment
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Ensure Perfectwork directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - "/opt/PW"
+        - "/opt/cstation"
+
+    - name: Odoo Development Environment to remote server - {{ ansible_host }}
+      ansible.posix.synchronize:
+        src: "/opt/PW/"
+        dest: "/opt/PW"
+        delete: true
+        copy_links: true
+        rsync_opts:
+          - "--exclude=.*"
+          - "--chmod=u=rwX,g=rX,o=rX"
+
+    - name: Control Station Code to remote server - {{ ansible_host }}
+      ansible.posix.synchronize:
+        src: "/opt/cstation/"
+        dest: "/opt/cstation"
+        delete: true
+        copy_links: true
+        rsync_opts:
+          - "--exclude=.*"
+          - "--chmod=u=rwX,g=rX,o=rX"
