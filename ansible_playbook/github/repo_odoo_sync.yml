@@ -19,6 +19,7 @@
         fork_url: "git@github.com:ansis-ai/odoo"
         upstream_url: "https://github.com/odoo/odoo.git"  # Add upstream
         local_dir: "/opt/PW/PW.6.0"
+        depth: 1
         branch: "16.0"
 
       - name: OpenUpgrade 17.0
