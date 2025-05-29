@@ -1,1 +1,1 @@
-from .ansible_utils import get_ansible_inventory, get_inventory_hosts
+from .server import get_ansible_inventory, get_inventory_hosts

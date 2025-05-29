@@ -1,0 +1,46 @@
+---
+- name: Sync multiple forked GitHub repositories with their upstream
+  hosts: localhost
+  vars:
+    repos:
+      - name: Odoo 18
+        fork_url: "git@github.com:ansis-ai/odoo"
+        upstream_url: "https://github.com/odoo/odoo.git"  # Add upstream
+        local_dir: "/opt/PW/PW.18.0"
+        branch: "18.0"
+
+      - name: Odoo 17
+        fork_url: "git@github.com:ansis-ai/odoo"
+        upstream_url: "https://github.com/odoo/odoo.git"  # Add upstream
+        local_dir: "/opt/PW/PW.7.0"
+        branch: "17.0"
+
+      - name: Odoo 16
+        fork_url: "git@github.com:ansis-ai/odoo"
+        upstream_url: "https://github.com/odoo/odoo.git"  # Add upstream
+        local_dir: "/opt/PW/PW.6.0"
+        branch: "16.0"
+
+      - name: OpenUpgrade 17.0
+        fork_url: "git@github.com:ansis-ai/OpenUpgrade.git"
+        upstream_url: "https://github.com/OCA/OpenUpgrade.git"  # Add upstream
+        local_dir: "/opt/PW/OpenUpgrade_17.0"
+        branch: "17.0"
+
+      - name: OpenUpgrade 16.0
+        fork_url: "git@github.com:ansis-ai/OpenUpgrade.git"
+        upstream_url: "https://github.com/OCA/OpenUpgrade.git"  # Add upstream
+        local_dir: "/opt/PW/OpenUpgrade_16.0"
+        branch: "16.0"
+
+      - name: OpenUpgrade 15.0
+        fork_url: "git@github.com:ansis-ai/OpenUpgrade.git"
+        upstream_url: "https://github.com/OCA/OpenUpgrade.git"  # Add upstream
+        local_dir: "/opt/PW/OpenUpgrade_15.0"
+        branch: "15.0"
+
+      - name: OpenUpgrade 14.0
+        fork_url: "git@github.com:ansis-ai/OpenUpgrade.git"
+        upstream_url: "https://github.com/OCA/OpenUpgrade.git"  # Add upstream
+        local_dir: "/opt/PW/OpenUpgrade_14.0"
+        branch: "14.0"

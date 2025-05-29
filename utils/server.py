@@ -5,7 +5,7 @@ import configparser
 def get_ansible_inventory():
     """Get inventory path from ansible.cfg"""
     config = configparser.ConfigParser()
-    config_path = Path('/Users/wsloh/cstation/etc/ansible.cfg')
+    config_path = Path('/Users/wsloh/cstation/etc/cstation.cfg')
     if config_path.exists():
         config.read(config_path)
         if 'defaults' in config and 'inventory' in config['defaults']:
